@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 
-import { loadOverview } from '@/api/local-service'
+import { listInstrumentChecks, loadOverview } from '@/api/local-service'
 import type { OverviewResult } from '@/data/types'
 
 const cards = ref<OverviewResult['cards']>([])
@@ -45,7 +45,7 @@ const moduleRows = ref<OverviewResult['modules']>([])
 
 function refresh() {
   const payload = loadOverview()
-  cards.value = payload.cards
+  cards.value = [...payload.cards, { label: '仪器核查待办', value: listInstrumentChecks().length }]
   moduleRows.value = payload.modules
 }
 

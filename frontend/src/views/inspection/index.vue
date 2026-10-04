@@ -22,6 +22,7 @@
       <span v-for="item in statusSummary" :key="item.status" class="legend-item">
         {{ item.status }}：{{ item.count }}
       </span>
+      <span class="legend-item">仪器核查待办：{{ instrumentChecks.length }}</span>
     </p>
 
     <form class="filter-bar" @submit.prevent="reload">
@@ -63,6 +64,42 @@
       </tbody>
     </table>
 
+    <section class="instrument-checks">
+      <h3 class="section-sub">仪器核查待办（{{ instrumentChecks.length }}）</h3>
+      <p class="page-desc">
+        来自仪器检定的临期、已过期、不合格与待补有效期仪器，按有效期、检定结论和使用站点排列；已停用仪器不再提示。
+      </p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>仪器编号</th>
+            <th>仪器名称</th>
+            <th>使用站点</th>
+            <th>提醒级别</th>
+            <th>有效期至</th>
+            <th>剩余天数</th>
+            <th>核查建议</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in instrumentChecks" :key="String(item.row.id)">
+            <td>{{ item.instrumentNo || '—' }}</td>
+            <td>{{ item.row['仪器名称'] || '—' }}</td>
+            <td>{{ item.station || '—' }}</td>
+            <td>
+              <span class="level-badge" :class="`level-${item.level}`">{{ item.level }}</span>
+            </td>
+            <td>{{ item.validUntil || '待补' }}</td>
+            <td>{{ item.daysLeft === null ? '—' : `${item.daysLeft} 天` }}</td>
+            <td>{{ adviceOf(item.level) }}</td>
+          </tr>
+          <tr v-if="!instrumentChecks.length">
+            <td colspan="7" class="empty-state">暂无仪器核查待办</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
     <footer class="page-foot">
       <span>共 {{ total }} 条巡检记录记录</span>
       <span v-if="errorMessage" class="error-text">{{ errorMessage }}</span>
@@ -76,10 +113,12 @@ import { computed, onMounted, ref } from 'vue'
 import {
   downloadEntries,
   listEntries,
+  listInstrumentChecks,
   moduleMeta,
   runAction as applyAction,
 } from '@/api/local-service'
-import type { EntryRow } from '@/data/types'
+import { LEVEL_ADVICE } from '@/data/calibration-rules'
+import type { EntryRow, InstrumentEval, InstrumentLevel } from '@/data/types'
 
 const meta = moduleMeta('inspection')
 const columns = ["记录编号", "站点编号", "巡检日期", "巡检人员", "检查项目", "发现问题", "处理措施", "巡检状态"]
@@ -88,6 +127,7 @@ const statuses = ["待巡检", "已巡检", "发现故障", "已处置"]
 const stats = [{"label": "本月巡检次数", "value": 0}, {"label": "已巡检站点", "value": 0}, {"label": "待处置故障", "value": 0}]
 
 const rows = ref<EntryRow[]>([])
+const instrumentChecks = ref<InstrumentEval[]>([])
 const total = ref(0)
 const errorMessage = ref('')
 const filters = ref<Record<string, string>>({})
@@ -98,6 +138,10 @@ const statusSummary = computed(() =>
     count: rows.value.filter((row) => String(row.status) === status).length,
   })),
 )
+
+function adviceOf(level: InstrumentLevel): string {
+  return LEVEL_ADVICE[level]
+}
 
 function resetFilters() {
   filters.value = {}
@@ -128,6 +172,7 @@ function reload() {
     const payload = listEntries(meta.key, filters.value)
     rows.value = payload.items
     total.value = payload.total
+    instrumentChecks.value = listInstrumentChecks()
   } catch (error) {
     errorMessage.value = error instanceof Error ? error.message : '巡检记录列表读取失败'
   }

@@ -33,5 +33,26 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .link { border: none; background: none; color: var(--brand); cursor: pointer; padding: 0; }
 .page-foot { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: var(--muted); }
 .error-text { color: #b42318; }
+.notice-text { color: #067647; }
 .status-legend { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 10px; font-size: 12px; color: var(--muted); }
 .legend-item { background: #eef2f7; border-radius: 999px; padding: 2px 10px; }
+.view-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+.view-tabs .tab { border: 1px solid var(--border); background: #fff; border-radius: 999px; padding: 4px 14px; font-size: 13px; cursor: pointer; }
+.view-tabs .tab.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+.level-badge { display: inline-block; border-radius: 999px; padding: 1px 10px; font-size: 12px; white-space: nowrap; }
+.level-正常 { background: #dcfae6; color: #067647; }
+.level-临期 { background: #fef0c7; color: #b54708; }
+.level-已过期 { background: #fee4e2; color: #b42318; }
+.level-不合格 { background: #fee4e2; color: #b42318; }
+.level-待补有效期 { background: #eef2f7; color: #475467; }
+.level-已停用 { background: #f2f4f7; color: #98a2b3; }
+.detail-mask { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); display: flex; align-items: center; justify-content: center; z-index: 20; }
+.detail-panel { background: #fff; border-radius: 10px; padding: 20px 24px; width: 520px; max-width: 92vw; max-height: 80vh; overflow: auto; }
+.detail-panel h3 { margin: 0 0 8px; font-size: 15px; }
+.detail-level { margin: 0 0 10px; font-size: 13px; }
+.detail-panel dl { display: grid; grid-template-columns: 96px 1fr; row-gap: 6px; column-gap: 10px; margin: 0 0 14px; font-size: 13px; }
+.detail-panel dt { color: var(--muted); }
+.detail-panel dd { margin: 0; }
+.section-sub { margin: 18px 0 6px; font-size: 14px; }
+.instrument-checks { margin-top: 16px; }
+.link:disabled { color: #98a2b3; cursor: not-allowed; }

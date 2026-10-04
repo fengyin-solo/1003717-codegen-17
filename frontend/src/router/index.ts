@@ -17,6 +17,7 @@ const Sediment = () => import('@/views/sediment/index.vue')
 const Communication = () => import('@/views/communication/index.vue')
 const Stationhouse = () => import('@/views/stationhouse/index.vue')
 const Calibration = () => import('@/views/calibration/index.vue')
+const CalibrationDetail = () => import('@/views/calibration/detail.vue')
 const Inspection = () => import('@/views/inspection/index.vue')
 const Plan = () => import('@/views/plan/index.vue')
 
@@ -40,6 +41,7 @@ const router = createRouter({
     { path: '/communication', name: 'communication', component: Communication },
     { path: '/stationhouse', name: 'stationhouse', component: Stationhouse },
     { path: '/calibration', name: 'calibration', component: Calibration },
+    { path: '/calibration/:id', name: 'calibration-detail', component: CalibrationDetail },
     { path: '/inspection', name: 'inspection', component: Inspection },
     { path: '/plan', name: 'plan', component: Plan },
   ],

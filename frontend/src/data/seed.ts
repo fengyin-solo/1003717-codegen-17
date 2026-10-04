@@ -1,8 +1,171 @@
 import type { EntryRow } from './types'
 
+// 相对今天偏移若干天的日期串，保证临期/过期示例在任何时候打开都成立。
+function offsetDate(days: number): string {
+  const date = new Date()
+  date.setDate(date.getDate() + days)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+// 仪器检定示例数据：覆盖合格、临期、过期、不合格、停用、送检中与缺有效期等场景。
+const CALIBRATION_SEED: EntryRow[] = [
+  {
+    id: 1,
+    status: '已合格',
+    pending: false,
+    abnormal: false,
+    记录编号: 'CALI-0001',
+    仪器编号: 'YQ-SW-001',
+    仪器名称: '转子式流速仪',
+    使用站点: '长江干流汉口站',
+    检定单位: '水利部水文仪器检测中心',
+    检定日期: offsetDate(-300),
+    有效期至: offsetDate(65),
+    检定结论: '合格',
+    检定状态: '已归档',
+  },
+  {
+    id: 2,
+    status: '已合格',
+    pending: true,
+    abnormal: false,
+    记录编号: 'CALI-0002',
+    仪器编号: 'YQ-SW-002',
+    仪器名称: '超声波水位计',
+    使用站点: '汉江襄阳站',
+    检定单位: '湖北省计量测试研究院',
+    检定日期: offsetDate(-340),
+    有效期至: offsetDate(12),
+    检定结论: '合格',
+    检定状态: '已归档',
+  },
+  {
+    id: 3,
+    status: '已合格',
+    pending: true,
+    abnormal: false,
+    记录编号: 'CALI-0003',
+    仪器编号: 'YQ-YL-014',
+    仪器名称: '翻斗式雨量计',
+    使用站点: '清江恩施站',
+    检定单位: '水利部水文仪器检测中心',
+    检定日期: offsetDate(-380),
+    有效期至: offsetDate(-20),
+    检定结论: '合格',
+    检定状态: '已归档',
+  },
+  {
+    id: 4,
+    status: '不合格',
+    pending: true,
+    abnormal: true,
+    记录编号: 'CALI-0004',
+    仪器编号: 'YQ-SL-007',
+    仪器名称: '便携式浊度仪',
+    使用站点: '洞庭湖城陵矶站',
+    检定单位: '湖南省计量检测研究院',
+    检定日期: offsetDate(-60),
+    有效期至: offsetDate(305),
+    检定结论: '不合格',
+    检定状态: '已归档',
+  },
+  {
+    id: 5,
+    status: '送检中',
+    pending: true,
+    abnormal: false,
+    记录编号: 'CALI-0005',
+    仪器编号: 'YQ-SW-021',
+    仪器名称: 'ADCP声学多普勒流速剖面仪',
+    使用站点: '长江干流宜昌站',
+    检定单位: '水利部水文仪器检测中心',
+    检定日期: offsetDate(-5),
+    有效期至: offsetDate(360),
+    检定结论: '',
+    检定状态: '在检',
+  },
+  {
+    id: 6,
+    status: '已停用',
+    pending: false,
+    abnormal: false,
+    记录编号: 'CALI-0006',
+    仪器编号: 'YQ-YL-033',
+    仪器名称: '人工式雨量筒（退役）',
+    使用站点: '府河安陆站',
+    检定单位: '湖北省计量测试研究院',
+    检定日期: offsetDate(-800),
+    有效期至: offsetDate(-435),
+    检定结论: '合格',
+    检定状态: '已归档',
+  },
+  {
+    id: 7,
+    status: '已合格',
+    pending: false,
+    abnormal: false,
+    记录编号: 'CALI-0007',
+    仪器编号: 'YQ-SW-045',
+    仪器名称: '气泡式水位计',
+    使用站点: '荆江沙市站',
+    检定单位: '长江水利委员会水文计量站',
+    检定日期: offsetDate(-100),
+    有效期至: offsetDate(265),
+    检定结论: '合格',
+    检定状态: '已归档',
+  },
+  {
+    id: 8,
+    status: '待送检',
+    pending: true,
+    abnormal: false,
+    记录编号: 'CALI-0008',
+    仪器编号: 'YQ-SW-052',
+    仪器名称: '电子水尺',
+    使用站点: '汉江丹江口站',
+    检定单位: '',
+    检定日期: '',
+    有效期至: '',
+    检定结论: '',
+    检定状态: '新购待检',
+  },
+  {
+    id: 9,
+    status: '已合格',
+    pending: true,
+    abnormal: false,
+    记录编号: 'CALI-0009',
+    仪器编号: 'YQ-SL-019',
+    仪器名称: '激光粒度分析仪',
+    使用站点: '洞庭湖城陵矶站',
+    检定单位: '湖南省计量检测研究院',
+    检定日期: offsetDate(-365),
+    有效期至: offsetDate(0),
+    检定结论: '合格',
+    检定状态: '已归档',
+  },
+  {
+    id: 10,
+    status: '不合格',
+    pending: true,
+    abnormal: true,
+    记录编号: 'CALI-0010',
+    仪器编号: 'YQ-SW-063',
+    仪器名称: '接触式流速仪',
+    使用站点: '清江恩施站',
+    检定单位: '水利部水文仪器检测中心',
+    检定日期: offsetDate(-200),
+    有效期至: offsetDate(-10),
+    检定结论: '不合格',
+    检定状态: '已归档',
+  },
+]
+
 // 示例数据：首次打开时播种，之后浏览器里的改动优先，重置才会回到这份。
-export const SEED_ROWS: Record<string, EntryRow[]> = {
-  "station": [
+export const SEED_ROWS: Record<string, EntryRow[]> = {  "station": [
     {
       "id": 1,
       "status": "正常运行",
@@ -662,50 +825,7 @@ export const SEED_ROWS: Record<string, EntryRow[]> = {
       "维护状态": "站房维护样例3"
     }
   ],
-  "calibration": [
-    {
-      "id": 1,
-      "status": "待送检",
-      "pending": true,
-      "abnormal": false,
-      "记录编号": "CALI-0001",
-      "仪器编号": "CALI-0001",
-      "仪器名称": "仪器检定样例1",
-      "检定单位": "仪器检定样例1",
-      "检定日期": "2026-09-01",
-      "有效期至": "仪器检定样例1",
-      "检定结论": "仪器检定样例1",
-      "检定状态": "仪器检定样例1"
-    },
-    {
-      "id": 2,
-      "status": "送检中",
-      "pending": true,
-      "abnormal": true,
-      "记录编号": "CALI-0002",
-      "仪器编号": "CALI-0002",
-      "仪器名称": "仪器检定样例2",
-      "检定单位": "仪器检定样例2",
-      "检定日期": "2026-09-02",
-      "有效期至": "仪器检定样例2",
-      "检定结论": "仪器检定样例2",
-      "检定状态": "仪器检定样例2"
-    },
-    {
-      "id": 3,
-      "status": "已合格",
-      "pending": false,
-      "abnormal": false,
-      "记录编号": "CALI-0003",
-      "仪器编号": "CALI-0003",
-      "仪器名称": "仪器检定样例3",
-      "检定单位": "仪器检定样例3",
-      "检定日期": "2026-09-03",
-      "有效期至": "仪器检定样例3",
-      "检定结论": "仪器检定样例3",
-      "检定状态": "仪器检定样例3"
-    }
-  ],
+  "calibration": CALIBRATION_SEED,
   "inspection": [
     {
       "id": 1,

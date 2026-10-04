@@ -85,3 +85,6 @@ desktop.ini
 *.db
 *.pid
 *.seed
+
+# ===== 本地测试构建产物 =====
+frontend/__test__/bundle.cjs
